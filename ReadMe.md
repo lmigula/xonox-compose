@@ -114,6 +114,8 @@ Für die  Domains `legacy.noxonserver.eu` und `gate1.noxonserver.eu` müssen Ein
 
 Je nach Internet Router kann die IP Adresse des pi-hole Servers danach auch als DNS Server in der allgemeinen Internet-Konfiguration eingetragen werden, damit dieser bei allen Clients genutzt wird.
 
+Eine Anleitung dafür findet sich hier <https://docs.pi-hole.net/routers/fritzbox-de/> ansonsten muss der Server mit der pi-hole Installtion im iRadio als DNS Server eingetragen werden.
+
 ### Installation xonox
 
 In das Verzeichnis dieses Repositories werden nun  die benötigten Repositories direkt von github geklont.
@@ -165,4 +167,5 @@ Beim Aufruf des Befehls `docker compose up` sollten nun beide Container erstellt
 
 Starten alle Container ohne Fehler und die Weboberfläche ist über die IP des Rechners aufrufbar und die Senderliste kann editiert werden, so können über Strg+C die Container beendet werden, und danach über `docker compose up -d` im Hintergrund gestartet werden.
 
-Das schöne an der Lösung ist, dass nun bei einem Update einer der Komponenten mit dem Befehl `docker-compose up -d --no-deps --build <service_name>`  ein einzelner Container neu erstellt werden kann, nachdem das dazugehörige git repository aktualisiert wurde.
+Das schöne an der Lösung ist, dass nun bei einem Update einer der Komponenten mit dem Befehl `docker-compose up -d --no-deps --build <service_name>`  ein einzelner Container neu aktualisiert werden kann, nachdem das dazugehörige git repository aktualisiert wurde.
+Also zum Beispiel `docker-compose up -d --no-deps --build xonox-back` für das Backend, oder halt `docker-compose up -d --no-deps --build xonox-front` für das Frontend
