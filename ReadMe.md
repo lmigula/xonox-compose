@@ -167,5 +167,5 @@ Beim Aufruf des Befehls `docker compose up` sollten nun beide Container erstellt
 
 Starten alle Container ohne Fehler und die Weboberfläche ist über die IP des Rechners aufrufbar und die Senderliste kann editiert werden, so können über Strg+C die Container beendet werden, und danach über `docker compose up -d` im Hintergrund gestartet werden.
 
-Das schöne an der Lösung ist, dass nun bei einem Update einer der Komponenten mit dem Befehl `docker-compose up -d --no-deps --build <service_name>`  ein einzelner Container neu aktualisiert werden kann, nachdem das dazugehörige git repository aktualisiert wurde.
-Also zum Beispiel `docker-compose up -d --no-deps --build xonox-back` für das Backend, oder halt `docker-compose up -d --no-deps --build xonox-front` für das Frontend
+Das schöne an der Lösung ist, dass nun bei einem Update einer der Komponenten mit dem Befehl `docker compose up -d --no-deps --build <service_name>`  ein einzelner Container neu aktualisiert werden kann, nachdem das dazugehörige git repository aktualisiert wurde.
+Also zum Beispiel `docker compose up -d --no-deps --build xonox-back` für das Backend, oder halt `docker compose up -d --no-deps --build xonox-front` für das Frontend
