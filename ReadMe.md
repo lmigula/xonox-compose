@@ -143,7 +143,7 @@ services:
       context: ./xonox
       dockerfile: Dockerfile
     volumes:
-       - ./xonox.conf:/usr/src/app/xonox.conf
+       - ./xonox.conf:/app/config/xonox.conf
     networks:
       - default
     restart: always
