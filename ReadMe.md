@@ -125,14 +125,6 @@ $ git clone https://github.com/x789/xonox.git
 $ git clone https://github.com/lmigula/xonox-frontend.git
 ```
 
-Da in dem xonox repostitory das benötigte Dockerfile bisher nur im develop Branch existiert muss dieser erst noch ausgecheckt werden.
-
-```
-$ cd xonox
-$ git checkout develop
-$ cd ..
-```
-
 In der bestehenden `docker-compose.yml` Datei für den xonox Dienst kann der Pfad für die xonox.conf angepasst werden falls gewünscht:
 
 ```
