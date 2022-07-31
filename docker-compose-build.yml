@@ -1,14 +1,18 @@
 version: '3'
 services:
   xonox-back:
-    image: lmigula/xonox-backend
+    build:
+      context: ./xonox
+      dockerfile: Dockerfile
     volumes:
       - ./xonox.conf:/app/config/xonox.conf
     networks:
       - default
     restart: always
   xonox-front:
-    image: lmigula/xonox-frontend
+    build:
+      context: ./xonox-frontend
+      dockerfile: Dockerfile
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     ports:

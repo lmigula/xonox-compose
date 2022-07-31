@@ -116,16 +116,57 @@ Je nach Internet Router kann die IP Adresse des pi-hole Servers danach auch als 
 
 Eine Anleitung dafür findet sich hier <https://docs.pi-hole.net/routers/fritzbox-de/> ansonsten muss der Server mit der pi-hole Installtion im iRadio als DNS Server eingetragen werden.
 
-### Installation xonox
 
-In das Verzeichnis dieses Repositories werden nun  die benötigten Repositories direkt von github geklont.
+### Installation xonox aus fertigen Docker images
+Die schnellste Variante sind die zur Verfügung gestellten Docker Images, die für die gängigsten Platformen zur Verfügung gestellt werden.
+In der bestehenden `docker-compose-build.yml` Datei für den xonox Dienst kann der Pfad für die xonox.conf angepasst werden falls gewünscht. Werden hier anstatt der Pfade `./xonox.conf` bwz `./nginx.conf` absolute Pfade verwendet, kann die Datei auch als Vorlage genutzt werden umd den Stack direkt im Portainer zu starten.
+
+```
+version: '3'
+services:
+  xonox-back:
+    image: lmigula/xonox-backend
+    volumes:
+      - ./xonox.conf:/app/config/xonox.conf
+    networks:
+      - default
+    restart: always
+  xonox-front:
+    image: lmigula/xonox-frontend
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    depends_on:
+      - xonox-back
+    restart: always
+networks:
+  default:
+
+```
+
+
+Ist auf dem Rechner schon ein Webserver installiert, und der xonox Dienst soll hinter einem Reverse-Proxy betrieben werden, so muss der Eintrag `ports` geändert werden.
+
+Beim Aufruf des Befehls `docker compose up` sollten nun beide Container erstellt und gestartet werden. Hierbei wird der Prozess noch nicht im Hintergrund gestartet um eventuelle Fehler zu sehen.
+
+Starten alle Container ohne Fehler und die Weboberfläche ist über die IP des Rechners aufrufbar und die Senderliste kann editiert werden, so können über Strg+C die Container beendet werden, und danach über `docker compose up -d` im Hintergrund gestartet werden.
+
+Das schöne an der Lösung ist, dass nun bei einem Update einer der Komponenten mit dem Befehl `docker compose up -d --no-deps --build <service_name>`  ein einzelner Container neu aktualisiert werden kann, nachdem das dazugehörige git repository aktualisiert wurde.
+Also zum Beispiel `docker compose up -d --no-deps --build xonox-back` für das Backend, oder halt `docker compose up -d --no-deps --build xonox-front` für das Frontend.
+
+Der komplette Dienst kann über `docker compose down` gestoppt werden.
+
+### Installation xonox aus den Quellen
+Falls die Images nicht auf dem neuesten Stand sind, oder eine anderer Branch gesteste werden soll, besteht die Möglichkeit die Images dirrekt aus den Quellen zu erzeugen.
+In das Verzeichnis dieses Repositories werden hierzu die benötigten Repositories direkt von github geklont.
 
 ```
 $ git clone https://github.com/x789/xonox.git
 $ git clone https://github.com/lmigula/xonox-frontend.git
 ```
 
-In der bestehenden `docker-compose.yml` Datei für den xonox Dienst kann der Pfad für die xonox.conf angepasst werden falls gewünscht:
+In der bestehenden `docker-compose-build.yml` Datei für den xonox Dienst kann der Pfad für die xonox.conf angepasst werden falls gewünscht:
 
 ```
 version: '3'
@@ -155,9 +196,14 @@ networks:
 
 Ist auf dem Rechner schon ein Webserver installiert, und der xonox Dienst soll hinter einem Reverse-Proxy betrieben werden, so muss der Eintrag `ports` geändert werden.
 
-Beim Aufruf des Befehls `docker compose up` sollten nun beide Container erstellt und gestartet werden. Hierbei wird der Prozess noch nicht im Hintergrund gestartet um eventuelle Fehler zu sehen.
+Beim Aufruf des Befehls `docker compose -f docker-compose-build.yml up` sollten nun beide Container erstellt und gestartet werden. Hierbei wird der Prozess noch nicht im Hintergrund gestartet um eventuelle Fehler zu sehen.
 
-Starten alle Container ohne Fehler und die Weboberfläche ist über die IP des Rechners aufrufbar und die Senderliste kann editiert werden, so können über Strg+C die Container beendet werden, und danach über `docker compose up -d` im Hintergrund gestartet werden.
+Starten alle Container ohne Fehler und die Weboberfläche ist über die IP des Rechners aufrufbar und die Senderliste kann editiert werden, so können über Strg+C die Container beendet werden, und danach über `docker compose -f docker-compose-build.yml up -d` im Hintergrund gestartet werden.
 
-Das schöne an der Lösung ist, dass nun bei einem Update einer der Komponenten mit dem Befehl `docker compose up -d --no-deps --build <service_name>`  ein einzelner Container neu aktualisiert werden kann, nachdem das dazugehörige git repository aktualisiert wurde.
-Also zum Beispiel `docker compose up -d --no-deps --build xonox-back` für das Backend, oder halt `docker compose up -d --no-deps --build xonox-front` für das Frontend
+Das schöne an der Lösung ist, dass nun bei einem Update einer der Komponenten mit dem Befehl `docker compose -f docker-compose-build.yml up -d --no-deps --build <service_name>`  ein einzelner Container neu aktualisiert werden kann, nachdem das dazugehörige git repository aktualisiert wurde.
+Also zum Beispiel `docker compose -f docker-compose-build.yml  up -d --no-deps --build xonox-back` für das Backend, oder halt `docker compose -f docker-compose-build.yml up -d --no-deps --build xonox-front` für das Frontend.
+
+Der komplette Dienst kann über `docker compose -f docker-compose-build.yml down` gestoppt werden. 
+
+
+
